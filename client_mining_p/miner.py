@@ -4,6 +4,8 @@ import requests
 import sys
 import json
 
+from time import time
+
 
 def proof_of_work(block):
     """
@@ -36,7 +38,7 @@ def valid_proof(block_string, proof):
     guess = f'{block_string}{proof}'.encode()
     guess_hash = hashlib.sha256(guess).hexdigest()
 
-    return guess_hash[:5] == "00000"
+    return guess_hash[:6] == "000000"
 
 
 if __name__ == '__main__':
@@ -57,6 +59,7 @@ if __name__ == '__main__':
 
     # Run forever until interrupted
     while True:
+        start = time()
         r = requests.get(url=node + "/last_block")
         # Handle non-json response
         try:
@@ -92,4 +95,4 @@ if __name__ == '__main__':
         # print the message from the server.
         if data['Message'] == "Success":
             coins_mined += 1
-            print(f"Coins mined: {coins_mined}")
+            print(f"Coins mined: {coins_mined}, Time Taken: {time()-start} seconds.")
